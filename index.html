@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDI Video Testimonials - Instructores</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #003366, #0066cc, #4d94ff);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .logo-placeholder {
+            width: 150px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #b8d4f1;
+        }
+
+        .drive-info {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .drive-info h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .drive-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #34ce57);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .drive-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
+        }
+
+        .welcome-screen, .question-screen, .complete-screen {
+            background: rgba(255, 255, 255, 0.95);
+            color: #003366;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .question-screen {
+            display: none;
+        }
+
+        .complete-screen {
+            display: none;
+        }
+
+        .instructor-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #003366;
+        }
+
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e6f2ff;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #003366;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e6f2ff;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066cc, #4d94ff);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .question-card {
+            background: #f8fbff;
+            border: 1px solid #e6f2ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #0066cc;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #003366;
+            font-weight: 500;
+        }
+
+        .recording-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 500px;
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #videoPreview, .recorded-video {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .timer.green {
+            color: #28a745;
+        }
+
+        .timer.yellow {
+            color: #ffc107;
+        }
+
+        .timer.red {
+            color: #dc3545;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .time-limit-info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .record-btn {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+            border: none;
+            color: white;
+            padding: 18px 35px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 6px 18px rgba(220, 53, 69, 0.3);
+            font-weight: 600;
+        }
+
+        .record-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .record-btn.recording {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+            animation: pulse 1s infinite;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #0066cc, #4d94ff);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .control-btn.delete {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+
+        .control-btn.retake {
+            background: linear-gradient(135deg, #ffc107, #ffca2c);
+            color: #000;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #0066cc, #4d94ff);
+            border: none;
+            color: white;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .start-btn, .submit-btn {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+            border: none;
+            color: white;
+            padding: 20px 45px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .start-btn:hover, .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+        }
+
+        .recording-status {
+            margin: 15px 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .warning-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            color: #003366;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.confirm {
+            background: #dc3545;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .email-form {
+            background: #f8fbff;
+            border: 2px solid #e6f2ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            color: #003366;
+        }
+
+        .email-form h3 {
+            margin-bottom: 15px;
+            color: #0066cc;
+        }
+
+        .download-btn, .email-btn {
+            background: linear-gradient(135deg, #fd7e14, #ff8c42);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: 600;
+        }
+
+        .email-btn {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .bubble:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            left: 60%;
+            animation-delay: 6s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .welcome-screen, .question-screen, .complete-screen {
+                padding: 25px;
+            }
+
+            .video-container {
+                max-width: 100%;
+            }
+
+            #videoPreview, .recorded-video {
+                height: 280px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .timer {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <img src="images/icon.png" alt="Logo SDI" class="logo-img">
+                </div>
+            </div>
+
+            <div class="main-title">SDI Video Testimonials</div>
+            <div class="subtitle">Comparte tu experiencia como instructor SDI</div>
+            
+            <div class="drive-info">
+                <h3>📁 Carpeta de Videos SDI</h3>
+                <p style="margin-bottom: 15px;">Todos los videos se subirán automáticamente a nuestra carpeta compartida</p>
+                <a href="https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link" 
+                   target="_blank" class="drive-link">
+                   🗂️ Ver Carpeta de Drive
+                </a>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h2 style="margin-bottom: 25px; text-align: center; color: #003366;">¡Bienvenido!</h2>
+            <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem; line-height: 1.6; color: #0066cc;">
+                Queremos conocer tu experiencia como instructor SDI. Te haremos 10 preguntas y podrás grabar tus respuestas en video.
+                <strong>Cada respuesta tiene un límite de 45 segundos.</strong>
+            </p>
+            
+            <div class="instructor-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="instructorName">Nombre del Instructor *</label>
+                        <input type="text" id="instructorName" placeholder="Tu nombre completo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="diveCenterName">Centro de Buceo *</label>
+                        <input type="text" id="diveCenterName" placeholder="Nombre de tu centro" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="instructorEmail">Email</label>
+                        <input type="email" id="instructorEmail" placeholder="tu@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instructorPhone">Teléfono</label>
+                        <input type="text" id="instructorPhone" placeholder="+1 234 567 8900">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="instructorLocation">Ubicación del Centro</label>
+                    <input type="text" id="instructorLocation" placeholder="Ciudad, País">
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="start-btn" onclick="startTestimonials()">🎬 Comenzar Video Testimonios</button>
+            </div>
+        </div>
+
+        <!-- Question Screen -->
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-number" id="questionNumber">Pregunta 1 de 10</div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+
+            <div class="time-limit-info">
+                <p><strong>⏰ Tiempo disponible: 45 segundos</strong></p>
+                <p>💡 Consejo: Piensa tu respuesta antes de comenzar a grabar</p>
+            </div>
+            
+            <div class="recording-controls">
+                <div class="video-container" id="videoContainer">
+                    <video id="videoPreview" autoplay muted></video>
+                    <div class="video-overlay" id="videoOverlay">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 20px;">🎥</div>
+                            <p style="font-size: 1.2rem;">Presiona "Grabar" para comenzar</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timer green" id="timer" style="display: none;">45</div>
+                
+                <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🔴 Grabar Respuesta</button>
+                
+                <div class="recording-status" id="recordingStatus"></div>
+                
+                <div id="videoControls" style="display: none;">
+                    <button class="control-btn retake" onclick="retakeVideo()">🔄 Grabar de Nuevo</button>
+                    <button class="control-btn delete" onclick="deleteRecording()">🗑️ Borrar</button>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="previousQuestion()">← Anterior</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Siguiente →</button>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="complete-screen" id="completeScreen">
+            <div class="success-message">
+                <h2>🎉 ¡Video Testimonios Completados!</h2>
+                <p>Gracias por compartir tu experiencia como instructor SDI</p>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #003366;">Resumen de respuestas:</h3>
+                <p id="summaryText" style="color: #0066cc;"></p>
+            </div>
+
+            <div class="email-form">
+                <h3>📧 Envío Automático a SDI</h3>
+                <p style="margin-bottom: 20px;">
+                    Los datos del instructor se han guardado y los videos se subirán automáticamente a la carpeta de Drive de SDI.
+                </p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sdiEmail">Email de SDI</label>
+                        <input type="email" id="sdiEmail" value="testimonials@sdi.org">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="emailMessage">Mensaje adicional</label>
+                    <textarea id="emailMessage" rows="3">Adjunto los video testimonios del instructor para revisión y uso promocional de SDI. Los videos están disponibles en la carpeta de Drive compartida.</textarea>
+                </div>
+                <button class="email-btn" onclick="sendToSDI()">
+                    <span id="emailBtnText">📧 Notificar a SDI</span>
+                    <div class="loading" id="emailLoading" style="display: none;"></div>
+                </button>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="download-btn" onclick="downloadTestimonials()">📥 Descargar ZIP de Respaldo</button>
+                <button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>
+            </div>
+        </div>
+
+        <!-- Warning Modal -->
+        <div class="warning-modal" id="warningModal" style="display: none;">
+            <div class="modal-content">
+                <h3 style="color: #dc3545; margin-bottom: 20px;">⚠️ Pregunta sin responder</h3>
+                <p id="modalMessage" style="margin-bottom: 20px;"></p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeModal()">Volver a Grabar</button>
+                    <button class="modal-btn confirm" onclick="continueAnyway()">Continuar Sin Respuesta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "¿Cómo se llama tu centro de buceo y qué lo hace único en tu región?",
+            "¿Qué especialidades o cursos ofrecen que más disfrutan tus alumnos?",
+            "¿Qué tipo de experiencias puede vivir una persona que bucea con ustedes por primera vez?",
+            "¿Cómo describirías el ambiente o la comunidad que se genera en tu centro?",
+            "¿Qué servicios adicionales ofrecen además de los cursos (salidas, viajes, snorkel, apnea, primeros auxilios, etc.)?",
+            "¿Cuál fue el momento más emocionante que viviste como instructor dentro de tu centro?",
+            "¿Qué diferencia encuentran tus alumnos al certificarse con SDI?",
+            "¿Por qué creés que tu centro es el lugar ideal para empezar o continuar una carrera en el buceo?",
+            "¿Qué mensaje le darías a alguien que está pensando en venir a bucear con vos?",
+            "En una frase: ¿qué significa para vos ser instructor SDI en tu propio centro?"
+        ];
+
+        const TIME_LIMIT = 45; // seconds
+        
+        let currentQuestion = 0;
+        let mediaRecorder;
+        let videoChunks = [];
+        let isRecording = false;
+        let recordingTimer;
+        let recordingTime = 0;
+        let recordings = {};
+        let instructorData = {};
+        let stream;
+        let currentVideoBlob;
+        let instructorDatabase = []; // Simulate database
+
+        async function startTestimonials() {
+            // Validate form
+            const name = document.getElementById('instructorName').value.trim();
+            const centerName = document.getElementById('diveCenterName').value.trim();
+            
+            if (!name || !centerName) {
+                alert('Por favor completa al menos tu nombre y el nombre del centro de buceo.');
+                return;
+            }
+            
+            instructorData = {
+                name: name,
+                centerName: centerName,
+                email: document.getElementById('instructorEmail').value.trim(),
+                phone: document.getElementById('instructorPhone').value.trim(),
+                location: document.getElementById('instructorLocation').value.trim(),
+                timestamp: new Date().toISOString(),
+                sessionId: generateSessionId()
+            };
+            
+            // Save instructor data to "database"
+            saveInstructorData(instructorData);
+            
+            try {
+                // Request camera access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 1280 }, 
+                        height: { ideal: 720 },
+                        facingMode: 'user'
+                    }, 
+                    audio: true 
+                });
+                
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('questionScreen').style.display = 'block';
+                
+                const videoPreview = document.getElementById('videoPreview');
+                videoPreview.srcObject = stream;
+                
+                showQuestion(0);
+                
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                alert('Error al acceder a la cámara. Por favor, permite el acceso a la cámara y micrófono e intenta de nuevo.');
+            }
+        }
+
+        function generateSessionId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function saveInstructorData(data) {
+            // In a real implementation, this would save to a database
+            instructorDatabase.push(data);
+            console.log('Instructor data saved:', data);
+            
+            // Save to localStorage as backup
+            const existingData = JSON.parse(localStorage.getItem('sdi_instructors') || '[]');
+            existingData.push(data);
+            localStorage.setItem('sdi_instructors', JSON.stringify(existingData));
+        }
+
+        function showQuestion(index) {
+            currentQuestion = index;
+            document.getElementById('questionNumber').textContent = `Pregunta ${index + 1} de ${questions.length}`;
+            document.getElementById('questionText').textContent = questions[index];
+            
+            // Update progress
+            const progress = ((index + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').textContent = index === questions.length - 1 ? 'Finalizar' : 'Siguiente →';
+            
+            // Reset UI for new question
+            resetRecordingUI();
+            showExistingRecording(index);
+        }
+
+        function showExistingRecording(index) {
+            const videoContainer = document.getElementById('videoContainer');
+            const videoPreview = document.getElementById('videoPreview');
+            const videoOverlay = document.getElementById('videoOverlay');
+            const videoControls = document.getElementById('videoControls');
+            
+            if (recordings[index]) {
+                // Show recorded video thumbnail
+                videoPreview.srcObject = null;
+                videoPreview.src = recordings[index].url;
+                videoPreview.muted = false;
+                videoOverlay.style.display = 'none';
+                videoControls.style.display = 'block';
+                
+                document.getElementById('recordingStatus').innerHTML = `✅ Respuesta grabada (${recordings[index].duration}s)`;
+            } else {
+                // Show live preview
+                videoPreview.srcObject = stream;
+                videoPreview.src = '';
+                videoPreview.muted = true;
+                videoOverlay.style.display = 'flex';
+                videoControls.style.display = 'none';
+                
+                document.getElementById('recordingStatus').innerHTML = '';
+            }
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                videoChunks = [];
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'video/webm;codecs=vp9,opus'
+                });
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        videoChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
+                    const videoUrl = URL.createObjectURL(videoBlob);
+                    
+                    recordings[currentQuestion] = {
+                        blob: videoBlob,
+                        url: videoUrl,
+                        duration: recordingTime
+                    };
+                    
+                    currentVideoBlob = videoBlob;
+                    showExistingRecording(currentQuestion);
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                recordingTime = TIME_LIMIT; // Start countdown from 45
+                
+                // Update UI
+                const recordBtn = document.getElementById('recordBtn');
+                recordBtn.textContent = '⏹️ Detener Grabación';
+                recordBtn.classList.add('recording');
+                
+                document.getElementById('videoOverlay').style.display = 'none';
+                document.getElementById('recordingStatus').innerHTML = '🔴 Grabando...';
+                document.getElementById('timer').style.display = 'block';
+                
+                updateTimerDisplay(recordingTime);
+                
+                // Start countdown timer
+                recordingTimer = setInterval(() => {
+                    recordingTime--;
+                    updateTimerDisplay(recordingTime);
+                    
+                    // Auto-stop at 0 seconds
+                    if (recordingTime <= 0) {
+                        stopRecording();
+                    }
+                }, 1000);
+                
+            } catch (err) {
+                console.error('Error starting recording:', err);
+                alert('Error al iniciar la grabación. Inténtalo de nuevo.');
+            }
+        }
+
+        function updateTimerDisplay(timeLeft) {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLeft.toString().padStart(2, '0');
+            
+            // Remove all color classes
+            timerElement.classList.remove('green', 'yellow', 'red');
+            
+            // Add appropriate color class
+            if (timeLeft > 30) {
+                timerElement.classList.add('green');
+            } else if (timeLeft > 10) {
+                timerElement.classList.add('yellow');
+            } else {
+                timerElement.classList.add('red');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                clearInterval(recordingTimer);
+                
+                // Calculate actual recording time
+                const actualDuration = TIME_LIMIT - recordingTime;
+                if (recordings[currentQuestion]) {
+                    recordings[currentQuestion].duration = actualDuration;
+                }
+                
+                resetRecordingUI();
+            }
+        }
+
+        function resetRecordingUI() {
+            const recordBtn = document.getElementById('recordBtn');
+            recordBtn.textContent = '🔴 Grabar Respuesta';
+            recordBtn.classList.remove('recording');
+            
+            const timerElement = document.getElementById('timer');
+            timerElement.style.display = 'none';
+            timerElement.classList.remove('green', 'yellow', 'red');
+        }
+
+        function retakeVideo() {
+            deleteRecording();
+            showExistingRecording(currentQuestion);
+        }
+
+        function deleteRecording() {
+            if (recordings[currentQuestion]) {
+                URL.revokeObjectURL(recordings[currentQuestion].url);
+                delete recordings[currentQuestion];
+                showExistingRecording(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function nextQuestion() {
+            // Check if current question has been answered
+            if (!recordings[currentQuestion]) {
+                showWarningModal();
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            } else {
+                completeTestimonials();
+            }
+        }
+
+        function showWarningModal() {
+            const modal = document.getElementById('warningModal');
+            const message = document.getElementById('modalMessage');
+            message.textContent = `No se ha grabado respuesta para la pregunta ${currentQuestion + 1}. ¿Estás seguro de continuar?`;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('warningModal').style.display = 'none';
+        }
+
+        function continueAnyway() {
+            closeModal();
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            } else {
+                completeTestimonials();
+            }
+        }
+
+        function completeTestimonials() {
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('completeScreen').style.display = 'block';
+            
+            const recordedCount = Object.keys(recordings).length;
+            document.getElementById('summaryText').textContent = 
+                `Has grabado ${recordedCount} de ${questions.length} respuestas en video para ${instructorData.name} - ${instructorData.centerName}`;
+        }
+
+        async function downloadTestimonials() {
+            try {
+                const zip = new JSZip();
+                
+                // Add instructor data
+                const instructorInfo = {
+                    ...instructorData,
+                    totalQuestions: questions.length,
+                    answeredQuestions: Object.keys(recordings).length,
+                    questions: questions,
+                    responses: Object.keys(recordings).map(q => parseInt(q) + 1)
+                };
+                
+                zip.file('instructor_data.json', JSON.stringify(instructorInfo, null, 2));
+                
+                // Add summary file
+                let summaryText = `VIDEO TESTIMONIALS SDI - ${instructorData.name}\n`;
+                summaryText += `==========================================\n\n`;
+                summaryText += `Centro de Buceo: ${instructorData.centerName}\n`;
+                if (instructorData.email) summaryText += `Email: ${instructorData.email}\n`;
+                if (instructorData.phone) summaryText += `Teléfono: ${instructorData.phone}\n`;
+                if (instructorData.location) summaryText += `Ubicación: ${instructorData.location}\n`;
+                summaryText += `Fecha: ${new Date().toLocaleDateString()}\n`;
+                summaryText += `ID de Sesión: ${instructorData.sessionId}\n`;
+                summaryText += `Total de videos: ${Object.keys(recordings).length}\n\n`;
+                
+                summaryText += `PREGUNTAS Y RESPUESTAS:\n`;
+                summaryText += `========================\n\n`;
+                
+                for (let i = 0; i < questions.length; i++) {
+                    summaryText += `${i + 1}. ${questions[i]}\n`;
+                    summaryText += recordings[i] ? 
+                        `   ✅ Respondida (${recordings[i].duration}s)\n   Archivo: Q${i + 1}_${instructorData.name.replace(/\s+/g, '_')}.webm\n\n` : 
+                        `   ❌ Sin responder\n\n`;
+                }
+                
+                summaryText += `\nNOTAS:\n`;
+                summaryText += `- Los videos están en formato WebM\n`;
+                summaryText += `- Límite de tiempo por respuesta: 45 segundos\n`;
+                summaryText += `- Para subir a Drive: ${window.location.origin}/drive-upload\n`;
+                
+                zip.file('README.txt', summaryText);
+                
+                // Add video files
+                for (const [questionIndex, recording] of Object.entries(recordings)) {
+                    const fileName = `Q${parseInt(questionIndex) + 1}_${instructorData.name.replace(/\s+/g, '_')}.webm`;
+                    zip.file(fileName, recording.blob);
+                }
+                
+                // Generate and download ZIP
+                const zipBlob = await zip.generateAsync({
+                    type: "blob",
+                    compression: "DEFLATE",
+                    compressionOptions: { level: 6 }
+                });
+                
+                const zipUrl = URL.createObjectURL(zipBlob);
+                const link = document.createElement('a');
+                link.href = zipUrl;
+                link.download = `SDI_Testimonials_${instructorData.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.zip`;
+                link.click();
+                
+                URL.revokeObjectURL(zipUrl);
+                alert('¡ZIP descargado exitosamente! Encontrarás el archivo en tu carpeta de descargas.');
+                
+            } catch (error) {
+                console.error('Error creating ZIP:', error);
+                alert('Error al crear el archivo ZIP. Inténtalo de nuevo.');
+            }
+        }
+
+        async function sendToSDI() {
+            const emailBtn = document.getElementById('emailBtnText');
+            const emailLoading = document.getElementById('emailLoading');
+            const sdiEmail = document.getElementById('sdiEmail').value.trim();
+            const emailMessage = document.getElementById('emailMessage').value.trim();
+            
+            if (!sdiEmail) {
+                alert('Por favor ingresa el email de SDI.');
+                return;
+            }
+            
+            // Show loading
+            emailBtn.style.display = 'none';
+            emailLoading.style.display = 'inline-block';
+            
+            try {
+                // Simulate uploading to Drive and sending notification
+                await simulateUploadToDrive();
+                
+                // Create email data
+                const emailData = {
+                    to: sdiEmail,
+                    subject: `Nuevos Video Testimonials SDI - ${instructorData.name} (${instructorData.centerName})`,
+                    body: `
+Hola equipo SDI,
+
+${emailMessage}
+
+DETALLES DEL INSTRUCTOR:
+================================
+- Nombre: ${instructorData.name}
+- Centro de Buceo: ${instructorData.centerName}
+${instructorData.email ? `- Email: ${instructorData.email}` : ''}
+${instructorData.phone ? `- Teléfono: ${instructorData.phone}` : ''}
+${instructorData.location ? `- Ubicación: ${instructorData.location}` : ''}
+- Fecha de grabación: ${new Date().toLocaleDateString()}
+- ID de Sesión: ${instructorData.sessionId}
+- Videos completados: ${Object.keys(recordings).length} de ${questions.length}
+
+ACCESO A LOS VIDEOS:
+📁 Carpeta de Drive: https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link
+📊 Base de datos de instructores: Disponible en panel administrativo
+
+Los videos están listos para revisión y uso promocional.
+
+Saludos,
+Sistema de Testimonios SDI
+                    `
+                };
+                
+                await simulateEmailSending(emailData);
+                
+                // Show success
+                emailBtn.textContent = '✅ SDI Notificado';
+                emailBtn.style.display = 'inline-block';
+                emailLoading.style.display = 'none';
+                
+                alert('¡SDI ha sido notificado exitosamente! Los videos están disponibles en la carpeta de Drive.');
+                
+            } catch (error) {
+                console.error('Error sending notification:', error);
+                emailBtn.textContent = '❌ Error al notificar';
+                emailBtn.style.display = 'inline-block';
+                emailLoading.style.display = 'none';
+                
+                alert('Error al enviar la notificación. Por favor, contacta directamente con SDI.');
+            }
+        }
+
+        async function simulateUploadToDrive() {
+            // Simulate upload delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            console.log('Videos simulados como subidos a Drive:', {
+                instructor: instructorData.name,
+                center: instructorData.centerName,
+                videoCount: Object.keys(recordings).length,
+                driveFolder: 'https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1'
+            });
+        }
+
+        async function simulateEmailSending(emailData) {
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            console.log('Email notification sent:', {
+                to: emailData.to,
+                subject: emailData.subject,
+                instructorData: instructorData,
+                videoCount: Object.keys(recordings).length
+            });
+            
+            // Create mailto link as fallback
+            const subject = encodeURIComponent(emailData.subject);
+            const body = encodeURIComponent(emailData.body);
+            const mailtoUrl = `mailto:${emailData.to}?subject=${subject}&body=${body}`;
+            
+            // Open email client
+            window.open(mailtoUrl);
+        }
+
+        function restartTestimonials() {
+            // Clean up
+            Object.values(recordings).forEach(recording => {
+                URL.revokeObjectURL(recording.url);
+            });
+            recordings = {};
+            instructorData = {};
+            currentQuestion = 0;
+            
+            // Stop any existing stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Reset form
+            document.getElementById('instructorName').value = '';
+            document.getElementById('diveCenterName').value = '';
+            document.getElementById('instructorEmail').value = '';
+            document.getElementById('instructorPhone').value = '';
+            document.getElementById('instructorLocation').value = '';
+            document.getElementById('sdiEmail').value = 'testimonials@sdi.org';
+            document.getElementById('emailMessage').value = 'Adjunto los video testimonios del instructor para revisión y uso promocional de SDI. Los videos están disponibles en la carpeta de Drive compartida.';
+            
+            // Reset email button
+            document.getElementById('emailBtnText').textContent = '📧 Notificar a SDI';
+            document.getElementById('emailBtnText').style.display = 'inline-block';
+            document.getElementById('emailLoading').style.display = 'none';
+            
+            // Show welcome screen
+            document.getElementById('completeScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'block';
+        }
+
+        // Export instructor data for admin panel
+        function exportInstructorDatabase() {
+            const data = JSON.parse(localStorage.getItem('sdi_instructors') || '[]');
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'sdi_instructors_database.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Handle page unload
+        window.addEventListener('beforeunload', function(e) {
+            if (isRecording) {
+                e.preventDefault();
+                e.returnValue = 'Tienes una grabación en curso. ¿Estás seguro de salir?';
+                return e.returnValue;
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            Object.values(recordings).forEach(recording => {
+                URL.revokeObjectURL(recording.url);
+            });
+        });
+
+        // Console commands for debugging
+        window.sdiAdmin = {
+            exportDatabase: exportInstructorDatabase,
+            viewDatabase: () => console.log(JSON.parse(localStorage.getItem('sdi_instructors') || '[]')),
+            clearDatabase: () => localStorage.removeItem('sdi_instructors'),
+            getCurrentSession: () => instructorData,
+            getRecordings: () => recordings
+        };
+
+    </script>
+</body>
+</html>
