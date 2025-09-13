@@ -727,15 +727,14 @@
 
             <div class="drive-info">
                 <h3>1. Descarga tus videos</h3>
-                <p style="margin-bottom: 15px;">Descarga los videos con el botón descargar, no te preocupes es un unico ZIP y luego adjúntalos a esta carpeta de Drive</p>
+                <p style="margin-bottom: 15px;">Descarga los videos con el botón descargar, no te preocupes es un único ZIP y luego adjúntalos a esta carpeta de Drive</p>
                 <div style="text-align: center;">
                     <button class="download-btn" onclick="downloadTestimonials()">📥 Descargar ZIP de Respaldo</button>
-                    <!--<button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>-->
                 </div>
             </div>
         
             <div class="drive-info">
-                <h3>2. Subilos al Drive de SDI</h3>
+                <h3>2. Subelos al Drive de SDI</h3>
                 <p style="margin-bottom: 15px;">Aprovecha y subi el logo de tu centro también</p>
                 <a href="https://drive.google.com/drive/folders/1MhuY8JimMojgj2GcrcbSDGG7fuVG__yU?usp=sharing" 
                     target="_blank" class="drive-link">
@@ -784,6 +783,7 @@
         let stream;
         let currentVideoBlob;
         let instructorDatabase = []; // Simulate database
+        let recordingStartTime = 0; // Nuevo: Para calcular duración real
 
         async function startTestimonials() {
             // Validate form
@@ -869,13 +869,22 @@
             const videoControls = document.getElementById('videoControls');
             
             if (recordings[index]) {
-                // Show recorded video thumbnail
-                videoPreview.srcObject = null;
-                videoPreview.src = recordings[index].url;
-                videoPreview.muted = false;
-                videoOverlay.style.display = 'none';
-                videoControls.style.display = 'block';
+                // Don't show recorded video thumbnail, just show live preview with overlay message
+                videoPreview.srcObject = stream;
+                videoPreview.src = '';
+                videoPreview.muted = true;
                 
+                // Show overlay with recorded status instead of playing video
+                videoOverlay.style.display = 'flex';
+                videoOverlay.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+                        <p style="font-size: 1.2rem;">Respuesta grabada</p>
+                        <p style="font-size: 1rem; opacity: 0.8;">${recordings[index].duration}s de duración</p>
+                    </div>
+                `;
+                
+                videoControls.style.display = 'block';
                 document.getElementById('recordingStatus').innerHTML = `✅ Respuesta grabada (${recordings[index].duration}s)`;
             } else {
                 // Show live preview
@@ -883,8 +892,13 @@
                 videoPreview.src = '';
                 videoPreview.muted = true;
                 videoOverlay.style.display = 'flex';
+                videoOverlay.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🎥</div>
+                        <p style="font-size: 1.2rem;">Presiona "Grabar" para comenzar</p>
+                    </div>
+                `;
                 videoControls.style.display = 'none';
-                
                 document.getElementById('recordingStatus').innerHTML = '';
             }
         }
@@ -900,6 +914,7 @@
         async function startRecording() {
             try {
                 videoChunks = [];
+                recordingStartTime = Date.now(); // Capturar tiempo de inicio
                 
                 mediaRecorder = new MediaRecorder(stream, {
                     mimeType: 'video/webm;codecs=vp9,opus'
@@ -914,11 +929,12 @@
                 mediaRecorder.onstop = () => {
                     const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
                     const videoUrl = URL.createObjectURL(videoBlob);
+                    const actualDuration = Math.round((Date.now() - recordingStartTime) / 1000); // Calcular duración real
                     
                     recordings[currentQuestion] = {
                         blob: videoBlob,
                         url: videoUrl,
-                        duration: recordingTime
+                        duration: actualDuration
                     };
                     
                     currentVideoBlob = videoBlob;
@@ -979,13 +995,6 @@
                 mediaRecorder.stop();
                 isRecording = false;
                 clearInterval(recordingTimer);
-                
-                // Calculate actual recording time
-                const actualDuration = TIME_LIMIT - recordingTime;
-                if (recordings[currentQuestion]) {
-                    recordings[currentQuestion].duration = actualDuration;
-                }
-                
                 resetRecordingUI();
             }
         }
@@ -1036,7 +1045,7 @@
         function showWarningModal() {
             const modal = document.getElementById('warningModal');
             const message = document.getElementById('modalMessage');
-            message.textContent = `No se ha grabado respuesta para la pregunta ${currentQuestion + 1}. ¿Estás seguro de continuar?`;
+            message.textContent = `No se ha grabado respuesta para la pregunta ${currentQuestion + 1}. ¿Deseas grabar una respuesta o continuar sin ella?`;
             modal.style.display = 'flex';
         }
 
@@ -1069,6 +1078,15 @@
 
         async function downloadTestimonials() {
             try {
+                // Show loading message
+                const downloadBtn = document.querySelector('.download-btn');
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = '📥 Generando archivo...';
+                downloadBtn.disabled = true;
+                
+                // Show alert about processing time
+                alert('El archivo ZIP se está generando, puede tomar unos segundos. Presiona "Aceptar" y espera a que se descargue automáticamente.');
+                
                 const zip = new JSZip();
                 
                 // Add instructor data
@@ -1134,9 +1152,18 @@
                 URL.revokeObjectURL(zipUrl);
                 alert('¡ZIP descargado exitosamente! Encontrarás el archivo en tu carpeta de descargas.');
                 
+                // Restore button
+                downloadBtn.textContent = originalText;
+                downloadBtn.disabled = false;
+                
             } catch (error) {
                 console.error('Error creating ZIP:', error);
                 alert('Error al crear el archivo ZIP. Inténtalo de nuevo.');
+                
+                // Restore button in case of error
+                const downloadBtn = document.querySelector('.download-btn');
+                downloadBtn.textContent = '📥 Descargar ZIP de Respaldo';
+                downloadBtn.disabled = false;
             }
         }
 
