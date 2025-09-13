@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDI Video Testimonials - Instructores</title>
     <link rel="icon" type="image/png" href="images/icon.png">
-
+    <title>SDI Video Testimonials - Instructores</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         * {
@@ -48,7 +47,6 @@
             width: 150px;
             height: 80px;
             background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -607,18 +605,8 @@
                     <img src="images/icon.png" alt="Logo SDI" class="logo-img">
                 </div>
             </div>
-
             <div class="main-title">SDI Video Testimonials</div>
             <div class="subtitle">Comparte tu experiencia como instructor SDI</div>
-            
-            <div class="drive-info">
-                <h3>📁 Carpeta de Videos SDI</h3>
-                <p style="margin-bottom: 15px;">Todos los videos se subirán automáticamente a nuestra carpeta compartida</p>
-                <a href="https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link" 
-                   target="_blank" class="drive-link">
-                   🗂️ Ver Carpeta de Drive
-                </a>
-            </div>
         </div>
 
         <!-- Welcome Screen -->
@@ -654,14 +642,21 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="instructorLocation">Ubicación del Centro</label>
-                    <input type="text" id="instructorLocation" placeholder="Ciudad, País">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="instructorLocation">Ubicación del Centro</label>
+                        <input type="text" id="instructorLocation" placeholder="Ciudad, País">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instagramHandle">@ de Instagram</label>
+                        <input type="text" id="instagramHandle" placeholder="@tu_centro_buceo">
+                    </div>
                 </div>
             </div>
             
             <div style="text-align: center;">
-                <button class="start-btn" onclick="startTestimonials()">🎬 Comenzar Video Testimonios</button>
+                <button class="start-btn" onclick="startTestimonials()">🎬 Comenzar</button>
             </div>
         </div>
 
@@ -674,11 +669,6 @@
             <div class="question-card">
                 <div class="question-number" id="questionNumber">Pregunta 1 de 10</div>
                 <div class="question-text" id="questionText"></div>
-            </div>
-
-            <div class="time-limit-info">
-                <p><strong>⏰ Tiempo disponible: 45 segundos</strong></p>
-                <p>💡 Consejo: Piensa tu respuesta antes de comenzar a grabar</p>
             </div>
             
             <div class="recording-controls">
@@ -695,6 +685,11 @@
                 <div class="timer green" id="timer" style="display: none;">45</div>
                 
                 <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🔴 Grabar Respuesta</button>
+                
+                <div class="time-limit-info">
+                    <p><strong>⏰ Tiempo disponible: 45 segundos</strong></p>
+                    <p>💡 Consejo: Piensa tu respuesta antes de comenzar a grabar</p>
+                </div>
                 
                 <div class="recording-status" id="recordingStatus"></div>
                 
@@ -713,39 +708,36 @@
         <!-- Complete Screen -->
         <div class="complete-screen" id="completeScreen">
             <div class="success-message">
-                <h2>🎉 ¡Video Testimonios Completados!</h2>
-                <p>Gracias por compartir tu experiencia como instructor SDI</p>
+                <h2>¡Gracias por ser parte de SDI Latinoamérica!</h2>
+                <p>Tu participación nos ayuda a ser una mejor agencia de buceo</p>
             </div>
             
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: #003366;">Resumen de respuestas:</h3>
-                <p id="summaryText" style="color: #0066cc;"></p>
+            <div style="margin-bottom: 30px; text-align: center; color: #003366;">
+                <h3 style="color: #0066cc;">Tu voz importa</h3>
+                <p style="font-size: 1.1rem; line-height: 1.6;">
+                    Como instructor SDI, tu experiencia y perspectiva son invaluables. Las respuestas que has compartido 
+                    formarán parte de nuestra estrategia de comunicación para SDI Latinoamérica, ayudando a otros 
+                    instructores y centros de buceo a conocer los beneficios de unirse a nuestra comunidad.
+                </p>
+                <p style="font-size: 1rem; color: #0066cc; margin-top: 20px;">
+                    <strong>Resumen:</strong> Has grabado <span id="summaryCount">0</span> de 10 respuestas en video para 
+                    <strong><span id="summaryInstructor">tu centro</span></strong>
+                </p>
             </div>
 
-            <div class="email-form">
-                <h3>📧 Envío Automático a SDI</h3>
-                <p style="margin-bottom: 20px;">
-                    Los datos del instructor se han guardado y los videos se subirán automáticamente a la carpeta de Drive de SDI.
-                </p>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="sdiEmail">Email de SDI</label>
-                        <input type="email" id="sdiEmail" value="testimonials@sdi.org">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="emailMessage">Mensaje adicional</label>
-                    <textarea id="emailMessage" rows="3">Adjunto los video testimonios del instructor para revisión y uso promocional de SDI. Los videos están disponibles en la carpeta de Drive compartida.</textarea>
-                </div>
-                <button class="email-btn" onclick="sendToSDI()">
-                    <span id="emailBtnText">📧 Notificar a SDI</span>
-                    <div class="loading" id="emailLoading" style="display: none;"></div>
-                </button>
+            <div class="drive-info">
+                <h3>📁 Carpeta de Videos SDI</h3>
+                <p style="margin-bottom: 15px;">Descarga los videos con el botón descargar y luego adjúntalos a esta carpeta de Drive</p>
+                <p style="margin-bottom: 15px;">Aprovecha y subi el logo de tu centro también</p>
+                <a href="https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link" 
+                   target="_blank" class="drive-link">
+                   🗂️ Ver Carpeta de Drive
+                </a>
             </div>
             
             <div style="text-align: center;">
                 <button class="download-btn" onclick="downloadTestimonials()">📥 Descargar ZIP de Respaldo</button>
-                <button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>
+                <!--<button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>-->
             </div>
         </div>
 
@@ -806,6 +798,7 @@
                 email: document.getElementById('instructorEmail').value.trim(),
                 phone: document.getElementById('instructorPhone').value.trim(),
                 location: document.getElementById('instructorLocation').value.trim(),
+                instagram: document.getElementById('instagramHandle').value.trim(),
                 timestamp: new Date().toISOString(),
                 sessionId: generateSessionId()
             };
@@ -846,11 +839,6 @@
             // In a real implementation, this would save to a database
             instructorDatabase.push(data);
             console.log('Instructor data saved:', data);
-            
-            // Save to localStorage as backup
-            const existingData = JSON.parse(localStorage.getItem('sdi_instructors') || '[]');
-            existingData.push(data);
-            localStorage.setItem('sdi_instructors', JSON.stringify(existingData));
         }
 
         function showQuestion(index) {
@@ -1072,8 +1060,8 @@
             document.getElementById('completeScreen').style.display = 'block';
             
             const recordedCount = Object.keys(recordings).length;
-            document.getElementById('summaryText').textContent = 
-                `Has grabado ${recordedCount} de ${questions.length} respuestas en video para ${instructorData.name} - ${instructorData.centerName}`;
+            document.getElementById('summaryCount').textContent = recordedCount;
+            document.getElementById('summaryInstructor').textContent = `${instructorData.name} - ${instructorData.centerName}`;
         }
 
         async function downloadTestimonials() {
@@ -1098,6 +1086,7 @@
                 if (instructorData.email) summaryText += `Email: ${instructorData.email}\n`;
                 if (instructorData.phone) summaryText += `Teléfono: ${instructorData.phone}\n`;
                 if (instructorData.location) summaryText += `Ubicación: ${instructorData.location}\n`;
+                if (instructorData.instagram) summaryText += `Instagram: ${instructorData.instagram}\n`;
                 summaryText += `Fecha: ${new Date().toLocaleDateString()}\n`;
                 summaryText += `ID de Sesión: ${instructorData.sessionId}\n`;
                 summaryText += `Total de videos: ${Object.keys(recordings).length}\n\n`;
@@ -1135,7 +1124,8 @@
                 const zipUrl = URL.createObjectURL(zipBlob);
                 const link = document.createElement('a');
                 link.href = zipUrl;
-                link.download = `SDI_Testimonials_${instructorData.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.zip`;
+                const today = new Date().toISOString().split('T')[0];
+                link.download = `${instructorData.centerName.replace(/\s+/g, '_')}_${today}.zip`;
                 link.click();
                 
                 URL.revokeObjectURL(zipUrl);
@@ -1145,107 +1135,6 @@
                 console.error('Error creating ZIP:', error);
                 alert('Error al crear el archivo ZIP. Inténtalo de nuevo.');
             }
-        }
-
-        async function sendToSDI() {
-            const emailBtn = document.getElementById('emailBtnText');
-            const emailLoading = document.getElementById('emailLoading');
-            const sdiEmail = document.getElementById('sdiEmail').value.trim();
-            const emailMessage = document.getElementById('emailMessage').value.trim();
-            
-            if (!sdiEmail) {
-                alert('Por favor ingresa el email de SDI.');
-                return;
-            }
-            
-            // Show loading
-            emailBtn.style.display = 'none';
-            emailLoading.style.display = 'inline-block';
-            
-            try {
-                // Simulate uploading to Drive and sending notification
-                await simulateUploadToDrive();
-                
-                // Create email data
-                const emailData = {
-                    to: sdiEmail,
-                    subject: `Nuevos Video Testimonials SDI - ${instructorData.name} (${instructorData.centerName})`,
-                    body: `
-Hola equipo SDI,
-
-${emailMessage}
-
-DETALLES DEL INSTRUCTOR:
-================================
-- Nombre: ${instructorData.name}
-- Centro de Buceo: ${instructorData.centerName}
-${instructorData.email ? `- Email: ${instructorData.email}` : ''}
-${instructorData.phone ? `- Teléfono: ${instructorData.phone}` : ''}
-${instructorData.location ? `- Ubicación: ${instructorData.location}` : ''}
-- Fecha de grabación: ${new Date().toLocaleDateString()}
-- ID de Sesión: ${instructorData.sessionId}
-- Videos completados: ${Object.keys(recordings).length} de ${questions.length}
-
-ACCESO A LOS VIDEOS:
-📁 Carpeta de Drive: https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link
-📊 Base de datos de instructores: Disponible en panel administrativo
-
-Los videos están listos para revisión y uso promocional.
-
-Saludos,
-Sistema de Testimonios SDI
-                    `
-                };
-                
-                await simulateEmailSending(emailData);
-                
-                // Show success
-                emailBtn.textContent = '✅ SDI Notificado';
-                emailBtn.style.display = 'inline-block';
-                emailLoading.style.display = 'none';
-                
-                alert('¡SDI ha sido notificado exitosamente! Los videos están disponibles en la carpeta de Drive.');
-                
-            } catch (error) {
-                console.error('Error sending notification:', error);
-                emailBtn.textContent = '❌ Error al notificar';
-                emailBtn.style.display = 'inline-block';
-                emailLoading.style.display = 'none';
-                
-                alert('Error al enviar la notificación. Por favor, contacta directamente con SDI.');
-            }
-        }
-
-        async function simulateUploadToDrive() {
-            // Simulate upload delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            console.log('Videos simulados como subidos a Drive:', {
-                instructor: instructorData.name,
-                center: instructorData.centerName,
-                videoCount: Object.keys(recordings).length,
-                driveFolder: 'https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1'
-            });
-        }
-
-        async function simulateEmailSending(emailData) {
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            console.log('Email notification sent:', {
-                to: emailData.to,
-                subject: emailData.subject,
-                instructorData: instructorData,
-                videoCount: Object.keys(recordings).length
-            });
-            
-            // Create mailto link as fallback
-            const subject = encodeURIComponent(emailData.subject);
-            const body = encodeURIComponent(emailData.body);
-            const mailtoUrl = `mailto:${emailData.to}?subject=${subject}&body=${body}`;
-            
-            // Open email client
-            window.open(mailtoUrl);
         }
 
         function restartTestimonials() {
@@ -1269,13 +1158,7 @@ Sistema de Testimonios SDI
             document.getElementById('instructorEmail').value = '';
             document.getElementById('instructorPhone').value = '';
             document.getElementById('instructorLocation').value = '';
-            document.getElementById('sdiEmail').value = 'testimonials@sdi.org';
-            document.getElementById('emailMessage').value = 'Adjunto los video testimonios del instructor para revisión y uso promocional de SDI. Los videos están disponibles en la carpeta de Drive compartida.';
-            
-            // Reset email button
-            document.getElementById('emailBtnText').textContent = '📧 Notificar a SDI';
-            document.getElementById('emailBtnText').style.display = 'inline-block';
-            document.getElementById('emailLoading').style.display = 'none';
+            document.getElementById('instagramHandle').value = '';
             
             // Show welcome screen
             document.getElementById('completeScreen').style.display = 'none';
@@ -1284,8 +1167,7 @@ Sistema de Testimonios SDI
 
         // Export instructor data for admin panel
         function exportInstructorDatabase() {
-            const data = JSON.parse(localStorage.getItem('sdi_instructors') || '[]');
-            const dataStr = JSON.stringify(data, null, 2);
+            const dataStr = JSON.stringify(instructorDatabase, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
@@ -1314,8 +1196,8 @@ Sistema de Testimonios SDI
         // Console commands for debugging
         window.sdiAdmin = {
             exportDatabase: exportInstructorDatabase,
-            viewDatabase: () => console.log(JSON.parse(localStorage.getItem('sdi_instructors') || '[]')),
-            clearDatabase: () => localStorage.removeItem('sdi_instructors'),
+            viewDatabase: () => console.log(instructorDatabase),
+            clearDatabase: () => instructorDatabase = [],
             getCurrentSession: () => instructorData,
             getRecordings: () => recordings
         };
