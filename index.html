@@ -726,19 +726,22 @@
             </div>
 
             <div class="drive-info">
-                <h3>📁 Carpeta de Videos SDI</h3>
-                <p style="margin-bottom: 15px;">Descarga los videos con el botón descargar y luego adjúntalos a esta carpeta de Drive</p>
+                <h3>1. Descarga tus videos</h3>
+                <p style="margin-bottom: 15px;">Descarga los videos con el botón descargar, no te preocupes es un unico ZIP y luego adjúntalos a esta carpeta de Drive</p>
+                <div style="text-align: center;">
+                    <button class="download-btn" onclick="downloadTestimonials()">📥 Descargar ZIP de Respaldo</button>
+                    <!--<button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>-->
+                </div>
+            </div>
+        
+            <div class="drive-info">
+                <h3>2. Subilos al Drive de SDI</h3>
                 <p style="margin-bottom: 15px;">Aprovecha y subi el logo de tu centro también</p>
-                <a href="https://drive.google.com/drive/folders/1UjXpNlY-ERezDiqhZAYbUpaV875bZFb1?usp=drive_link" 
-                   target="_blank" class="drive-link">
-                   🗂️ Ver Carpeta de Drive
+                <a href="https://drive.google.com/drive/folders/1MhuY8JimMojgj2GcrcbSDGG7fuVG__yU?usp=sharing" 
+                    target="_blank" class="drive-link">
+                    🔼 Subirlos al Drive
                 </a>
-            </div>
             
-            <div style="text-align: center;">
-                <button class="download-btn" onclick="downloadTestimonials()">📥 Descargar ZIP de Respaldo</button>
-                <!--<button class="start-btn" onclick="restartTestimonials()">🔄 Comenzar de Nuevo</button>-->
-            </div>
         </div>
 
         <!-- Warning Modal -->
@@ -757,15 +760,15 @@
     <script>
         const questions = [
             "¿Cómo se llama tu centro de buceo y qué lo hace único en tu región?",
-            "¿Qué especialidades o cursos ofrecen que más disfrutan tus alumnos?",
+            "¿Qué especialidades o cursos ofrecen y cual es la que más disfrutan tus alumnos?",
             "¿Qué tipo de experiencias puede vivir una persona que bucea con ustedes por primera vez?",
-            "¿Cómo describirías el ambiente o la comunidad que se genera en tu centro?",
+            "¿Cómo describirías el ambiente o la comunidad que se genera en tu centro SDI?",
             "¿Qué servicios adicionales ofrecen además de los cursos (salidas, viajes, snorkel, apnea, primeros auxilios, etc.)?",
-            "¿Cuál fue el momento más emocionante que viviste como instructor dentro de tu centro?",
+            "¿Cuál fue el momento más emocionante que viviste como instructor dentro de tu centro SDI?",
             "¿Qué diferencia encuentran tus alumnos al certificarse con SDI?",
             "¿Por qué creés que tu centro es el lugar ideal para empezar o continuar una carrera en el buceo?",
             "¿Qué mensaje le darías a alguien que está pensando en venir a bucear con vos?",
-            "En una frase: ¿qué significa para vos ser instructor SDI en tu propio centro?"
+            "En una frase: ¿qué significa para vos ser instructor SDI?"
         ];
 
         const TIME_LIMIT = 45; // seconds
